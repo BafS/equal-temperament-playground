@@ -1,6 +1,7 @@
 {
   "name": "equal-temperament-playground",
   "version": "0.1.0",
+  "homepage": "https://bafs.github.io/equal-temperament-playground",
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
