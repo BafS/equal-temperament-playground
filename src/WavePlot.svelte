@@ -1,10 +1,12 @@
 <script>
-	import {afterUpdate} from 'svelte';
+	import {onMount, afterUpdate} from 'svelte';
 
 	let canvas;
 	export let scaleBinary;
 	export let frequencyRoot = 440;
 	export let semitones = 12;
+  export let width = 1000;
+  export let height = 300;
 	const colors = ['FF8A80', 'B388FF', '80D8FF', 'B9F6CA', 'FFFF8D', 'FF9E80', '8D6E63'];
 
 	$: frequency = (n) => 2 ** (n / semitones);
@@ -13,7 +15,7 @@
 
 	const frequencyFunctionCreator = (hz) => (t) => Math.sin(t * hz * Math.PI * 2);
 
-	const compression = 50000;
+	const compression = 100000;
 
 	const plot = (ctx, fun, color) => {
 		let previous = 0;
@@ -71,6 +73,11 @@
     console.log('elapsed time = ' + dt + ' ms');
 	});
 
+	onMount(() => {
+    canvas.width = width * 2;
+    canvas.height = height * 2;
+	});
+
 	afterUpdate(() => {
 		canvasFn();
 	});
@@ -78,14 +85,12 @@
 
 <canvas
 	bind:this={canvas}
-	width={1500}
-	height={500}
+	height={height * 2}
 ></canvas>
 
 <style>
   canvas {
     width: 100%;
-    height: 400px;
     background-color: #000;
   }
 </style>

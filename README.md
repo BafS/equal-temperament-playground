@@ -2,7 +2,7 @@
 
 > Playground page to play with any equal temperament tuning system.
 
-![](https://i.imgur.com/vIJQWXv.png)
+![](https://i.imgur.com/VDXI0gK.png)
 
 ## Dev
 

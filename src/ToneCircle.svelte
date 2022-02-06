@@ -23,7 +23,8 @@
     const ratioToSemitones = (ratio) => semitones * Math.log2(ratio);
     export let generator = Math.round(ratioToSemitones(3/2));
 
-    let hovering;
+    let hovering = false;
+
     $: radius = (Math.min(height, width) / 2) - 20;
 
     $: getPositionOnCircle = (s) => ([

@@ -77,7 +77,7 @@
 </script>
 <h1>Equal temperament playground</h1>
 
-<WavePlot frequencyRoot={frequencyRoot} semitones={semitones} scaleBinary={scaleBinary} />
+<WavePlot frequencyRoot={frequencyRoot} semitones={semitones} scaleBinary={scaleBinary} width={rowWidth} />
 
 <div class="row main-inputs">
   <span>Scale: <input type="text" maxlength={semitones} bind:value={scaleBinary}></span>
@@ -130,7 +130,7 @@
 
     <div class="column">
       <div id="tone-circle">
-        <h4>Circle of firth</h4>
+        <h4><a href="https://en.wikipedia.org/wiki/Circle_of_fifths">Circle of fifths</a></h4>
         <ToneCircle
           width={rowWidth > 1000 ? (rowWidth / 2) : 280}
           height={rowWidth > 1000 ? (rowWidth / 3) : 280}
@@ -173,7 +173,7 @@
   }
   table {
     min-width: 500px;
-    background: #f8f8f8;
+    background: #fbfbfb;
     padding: .2rem;
     border-collapse: collapse;
     text-align: left;
@@ -181,46 +181,52 @@
   table thead, table tfoot {
     background: #eee;
   }
+  table td, table th {
+    padding: .5rem 1.5rem;
+    vertical-align: top;
+  }
+  table td {
+    border-top: 1px solid #dee2e6;
+  }
 
-table td, table th {
-  padding: .5rem 1.5rem;
-  vertical-align: top;
-}
-table td {
-  border-top: 1px solid #dee2e6;
-}
+  .row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+  }
 
-.row {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  width: 100%;
-}
+  .column {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 100%;
+    flex: 1;
+    padding: 0 .25rem;
+  }
 
-.column {
-  display: flex;
-  flex-direction: column;
-  flex-basis: 100%;
-  flex: 1;
-  padding: 0 .25rem;
-}
+  h1 {
+    font-size: 1.2rem;
+    font-weight: normal;
+    background: #000;
+    display: inline-block;
+    color: #fff;
+    padding: 2px;
+    margin: 0;
+    margin-bottom: 6px;
+  }
 
-h1 {
-  font-size: 1.2rem;
-}
+  .main-inputs {
+    margin-top: 4px;
+    margin-bottom: 8px;
+  }
 
-.main-inputs {
-  margin-top: 4px;
-  margin-bottom: 8px;
-}
+  .main-inputs span {
+    margin-right: 25px;
+  }
 
-.main-inputs span {
-  margin-right: 25px;
-}
-
-.btn-play {
-  background-color: rgba(200, 200, 200, .075);
-  font-size: 90%;
-  padding: 2px 10px;
-}
+  .btn-play {
+    background-color: rgba(200, 200, 200, .075);
+    font-size: 90%;
+    padding: 2px 10px;
+  }
 </style>
