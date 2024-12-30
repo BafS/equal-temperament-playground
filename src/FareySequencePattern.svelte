@@ -1,14 +1,27 @@
 <script>
-  export let fareySequenceOrder;
-  export let frequencyRoot;
-  export let fareySequence;
-  export let frequencyInfos;
-  export let width = 500;
+  /**
+   * @typedef {Object} Props
+   * @property {any} fareySequenceOrder
+   * @property {any} frequencyRoot
+   * @property {any} fareySequence
+   * @property {any} frequencyInfos
+   * @property {number} [width]
+   */
+
+  /** @type {Props} */
+  let {
+    fareySequenceOrder,
+    frequencyRoot,
+    fareySequence,
+    frequencyInfos,
+    width = 500
+  } = $props();
+
   let cellHeight = 12;
-  let height = (fareySequenceOrder + 1.5) * cellHeight;
+  let height = $derived((fareySequenceOrder + 1.5) * cellHeight);
 </script>
 
-<svg width="{width}" height={height}>
+<svg width={width} height={height}>
   <g transform="translate(1, 0)">
     {#each fareySequence as [a, b], i}
       <rect opacity="1" fill="#039BE5" width="4" height="{cellHeight}" y={(b - 1) * cellHeight} x={(a/b - 1) * (width - 5)} tabindex="-1"></rect>
