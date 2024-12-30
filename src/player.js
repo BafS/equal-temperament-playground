@@ -5,11 +5,11 @@ const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 /**
  * @param {number} frequency
  * @param {number} duration
- * @param {{gain: number, onended: () => any}|null} options
+ * @param {{gain: number, onended: () => void}|null} options
  */
 export const playTone = (frequency, duration, options = null) => {
     const gainNode = audioCtx.createGain();
-    gainNode.gain.value = options?.gain ?? 0.75;
+    gainNode.gain.value = options?.gain ?? 0.5;
     gainNode.connect(audioCtx.destination);
 
     const oscillator = audioCtx.createOscillator();
