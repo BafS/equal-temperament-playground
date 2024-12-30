@@ -21,7 +21,7 @@ body {
 }
 
 a {
-	color: rgb(0,100,200);
+	color: rgb(0,100,210);
 	text-decoration: none;
 }
 
@@ -38,8 +38,8 @@ label {
 }
 
 input, button, select, textarea {
-	font-family: inherit;
-	font-size: inherit;
+	font-family: monospace;
+	font-size: 110%;
 	-webkit-padding: 0.4em 0;
 	padding: 0.4em;
 	margin: 0 0 0.5em 0;
@@ -56,6 +56,7 @@ button {
 	color: #333;
 	background-color: #f4f4f4;
 	outline: none;
+	margin: 0 4px;
 }
 
 button:disabled {
@@ -68,4 +69,8 @@ button:not(:disabled):active {
 
 button:focus {
 	border-color: #666;
+}
+
+button:hover {
+  border-color: #88c;
 }

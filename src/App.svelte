@@ -39,6 +39,12 @@
     return best;
   };
 
+  /**
+   * @param {number} number
+   * @param {number} precision
+   */
+  const round = (number, precision) => Math.round(number * 10 ** precision) / 10 ** precision;
+
   let fareySequenceOrder = $state(15);
   const fareySequence = $derived(getFareySequence(fareySequenceOrder));
 
@@ -50,7 +56,7 @@
 
   let frequency = $derived((n) => 2 ** (n / semitones));
 
-  let frequencies = $derived(scaleBinary.padEnd(semitones + 1, '0').split('').map((v, i) => [v === '1' || v === 'x', frequency(i)]));
+  let frequencies = $derived((scaleBinary.padEnd(semitones , '0') + (scaleBinary[0] ?? '0')).split('').map((v, i) => [v === '1' || v === 'x', frequency(i)]));
 
   let frequencyInfo = $derived(([selected, freq]) => {
     const base = {
@@ -59,7 +65,7 @@
       freq: freq * frequencyRoot,
       farey: getClosestFromFareySequence(fareySequence, freq),
     };
-    base.fareyError = 1 - (1/ freq * base.farey[0] / base.farey[1]);
+    base.fareyError = 1 - (1 / freq * base.farey[0] / base.farey[1]);
     base.fareyErrorAbs = freq * frequencyRoot - (frequencyRoot * base.farey[0] / base.farey[1]);
 
     return base;
@@ -84,12 +90,13 @@
 
 </script>
 <h1>Equal temperament playground</h1>
+<span class="source"><a href="https://github.com/BafS/equal-temperament-playground">source</a></span>
 
 <WavePlot frequencyRoot={frequencyRoot} semitones={semitones} scaleBinary={scaleBinary} width={rowWidth} />
 
 <div class="row main-inputs">
-  <span>Scale: <input type="text" maxlength={semitones} bind:value={scaleBinary}></span>
-  <span>Fundamental frequency (<em>hz</em>): <input type="number" bind:value={frequencyRoot}></span>
+  <span title="Use 0/1 to define which semi-tones are part of the scale">Scale: <input type="text" maxlength={semitones} bind:value={scaleBinary}></span>
+  <span><a href="https://en.wikipedia.org/wiki/Fundamental_frequency">Fundamental frequency</a> (<em>hz</em>): <input type="number" bind:value={frequencyRoot}></span>
   <span>Semi-tones: <input type="number" bind:value={semitones}></span>
   <span>Farey sequence order: <input type="number" min=2 max=200 bind:value={fareySequenceOrder}></span>
 </div>
@@ -117,7 +124,7 @@
             <td>{i}</td>
             <td>{freq ? Math.round(freq * 100) / 100 : ''} <small>Hz</small> <button class="btn-play" onclick={() => playTone(freq, 1)}>▶</button></td>
         <!--     <td></td> -->
-            <td>{farey.join('/')}</td>
+            <td>{farey.join(':')}</td>
             <td>{Math.round(fareyError * 10000) / 100}<small>%</small> <small>({Math.round(fareyErrorAbs * 100) / 100} Hz)</small></td>
           </tr>
           {/each}
@@ -142,12 +149,11 @@
         <ToneCircle
           width={rowWidth > 1000 ? (rowWidth / 2) : 280}
           height={rowWidth > 1000 ? (rowWidth / 3) : 280}
-          frequencyInfos={frequencyInfos}
           semitones={semitones}
           generator={toneCircleGenerator}
           frequencyRoot={frequencyRoot}
         /><br>
-        Generator: <input class="input-small" type="number" max="199" bind:value={toneCircleGenerator}>
+        Generator: <input class="input-small" type="number" min="1" max="199" bind:value={toneCircleGenerator}>
       </div>
 
       <div id="farey-sequence-pattern">
@@ -163,9 +169,9 @@
 
       <div>
         <p>
-          Perfect fifth: {frequencyRoot * 3/2} Hz<br>
-          Perfect fourth: {frequencyRoot * 4/3} Hz<br>
-          Major third: {frequencyRoot * 5/4} Hz<br>
+          <a href="https://en.wikipedia.org/wiki/Perfect_fifth">Perfect fifth</a>: {round(frequencyRoot * 3/2, 4)} Hz<br>
+          <a href="https://en.wikipedia.org/wiki/Perfect_fourth">Perfect fourth</a>: {round(frequencyRoot * 4/3, 4)} Hz<br>
+          <a href="https://en.wikipedia.org/wiki/Major_third">Major third</a>: {round(frequencyRoot * 5/4, 4)} Hz<br>
         </p>
       </div>
     </div>
@@ -190,7 +196,7 @@
     background: #eee;
   }
   table td, table th {
-    padding: .5rem 1.5rem;
+    padding: .4rem 1.5rem;
     vertical-align: top;
   }
   table td {
@@ -222,6 +228,10 @@
     margin: 0;
     margin-bottom: 6px;
   }
+  .source {
+    font-size: 80%;
+    float: right;
+  }
 
   .main-inputs {
     margin-top: 4px;
@@ -235,6 +245,6 @@
   .btn-play {
     background-color: rgba(200, 200, 200, .075);
     font-size: 90%;
-    padding: 2px 10px;
+    padding: 3px 10px;
   }
 </style>
