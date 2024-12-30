@@ -4,6 +4,10 @@
   import FareySequencePattern from './FareySequencePattern.svelte';
   import {playTone} from './player';
 
+  /**
+   * @param {number} order
+   * @return {[number, number][]}
+   */
   const getFareySequence = (order) => {
     let fareySequenceSet = {};
     for (let b = 1; b <= order; ++b) {
@@ -16,6 +20,10 @@
     return Object.values(fareySequenceSet).sort(([a0, b0], [a1, b1]) => a0 / b0 - a1 / b1);
   };
 
+  /**
+   * @param {[number, number][]} sequence
+   * @param {number} number
+   */
   const getClosestFromFareySequence = (sequence, number) => {
     let error = null;
     let best = null;
@@ -31,20 +39,20 @@
     return best;
   };
 
-  let fareySequenceOrder = 15;
-  $: fareySequence = getFareySequence(fareySequenceOrder);
+  let fareySequenceOrder = $state(15);
+  const fareySequence = $derived(getFareySequence(fareySequenceOrder));
 
-  let frequencyRoot = 440;
-  let semitones = 12; // semitones
+  let frequencyRoot = $state(440);
+  let semitones = $state(12); // semitones
   // let scaleBinary = "10";
-  let scaleBinary = "101101011010"; // C minor
-  let rowWidth;
+  let scaleBinary = $state("101101011010"); // C minor
+  let rowWidth = $state();
 
-  $: frequency = (n) => 2 ** (n / semitones);
+  let frequency = $derived((n) => 2 ** (n / semitones));
 
-  $: frequencies = scaleBinary.padEnd(semitones + 1, '0').split('').map((v, i) => [v === '1' || v === 'x', frequency(i)]);
+  let frequencies = $derived(scaleBinary.padEnd(semitones + 1, '0').split('').map((v, i) => [v === '1' || v === 'x', frequency(i)]));
 
-  $: frequencyInfo = ([selected, freq]) => {
+  let frequencyInfo = $derived(([selected, freq]) => {
     const base = {
       selected,
       normalizedFreq: freq - 1,
@@ -55,11 +63,10 @@
     base.fareyErrorAbs = freq * frequencyRoot - (frequencyRoot * base.farey[0] / base.farey[1]);
 
     return base;
-  };
+  });
 
-  $: frequencyInfos = frequencies.map(frequencyInfo);
-  $: frequencyStats = (() => {
-    console.log(1);
+  let frequencyInfos = $derived(frequencies.map(frequencyInfo));
+  let frequencyStats = $derived((() => {
     let maxError = null;
     let sum = 0;
     frequencyInfos.forEach(({freq, fareyError}) => {
@@ -71,9 +78,10 @@
       maxError,
       avgError: sum / semitones,
     };
-  })();
+  })());
 
-  $: toneCircleGenerator = 7;
+  let toneCircleGenerator = $state(7);
+
 </script>
 <h1>Equal temperament playground</h1>
 
@@ -107,7 +115,7 @@
           {#each frequencyInfos as {selected, freq, farey, fareyError, fareyErrorAbs}, i}
           <tr style="{!selected ? `opacity: .6` : ``}">
             <td>{i}</td>
-            <td>{freq ? Math.round(freq * 100) / 100 : ''} <small>Hz</small> <button class="btn-play" on:click={() => playTone(freq, 1)}>▶</button></td>
+            <td>{freq ? Math.round(freq * 100) / 100 : ''} <small>Hz</small> <button class="btn-play" onclick={() => playTone(freq, 1)}>▶</button></td>
         <!--     <td></td> -->
             <td>{farey.join('/')}</td>
             <td>{Math.round(fareyError * 10000) / 100}<small>%</small> <small>({Math.round(fareyErrorAbs * 100) / 100} Hz)</small></td>
